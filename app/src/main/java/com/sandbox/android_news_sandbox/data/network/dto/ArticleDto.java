@@ -1,4 +1,4 @@
-package com.sandbox.android_news_sandbox.data;
+package com.sandbox.android_news_sandbox.data.network.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -18,6 +18,10 @@ public class ArticleDto {
     @SerializedName("urlToImage")
     @Expose
     private String urlToImage;
+
+    @SerializedName("url")
+    @Expose
+    private String urlArticale;
 
     @SerializedName("content")
     @Expose
@@ -61,5 +65,9 @@ public class ArticleDto {
 
     public SourceDto getSource() {
         return source;
+    }
+
+    public String getUrlArticale() {
+        return urlArticale;
     }
 }

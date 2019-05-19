@@ -9,22 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sandbox.android_news_sandbox.App;
 import com.sandbox.android_news_sandbox.R;
-import com.sandbox.android_news_sandbox.data.NewsRepositoryImpl;
 import com.sandbox.android_news_sandbox.model.News;
-import com.sandbox.android_news_sandbox.model.NewsInteractorImpl;
 import com.sandbox.android_news_sandbox.presentation.CategoryNews;
-import com.sandbox.android_news_sandbox.presentation.NewsAdapter;
-import com.sandbox.android_news_sandbox.presentation.NewsPresenter;
-import com.sandbox.android_news_sandbox.presentation.Presenter;
+import com.sandbox.android_news_sandbox.presentation.adapter.NewsAdapter;
+import com.sandbox.android_news_sandbox.presentation.presenter.Presenter;
 import com.sandbox.android_news_sandbox.presentation.view.NewsView;
 
+import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class NewsFragment extends Fragment implements NewsView {
 
-    private Presenter presenter;
+    @Inject
+    Presenter presenter;
 
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
@@ -54,8 +56,9 @@ public class NewsFragment extends Fragment implements NewsView {
         recyclerView.setLayoutManager(new LinearLayoutManager(sportsRecyclerView.getContext()));
         newsAdapter = new NewsAdapter();
 
-        presenter = new NewsPresenter(new NewsInteractorImpl(new NewsRepositoryImpl(), categoryNews), this);
+        App.getMainComponent().inject(this);
 
+        presenter.init(categoryNews, this);
 
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setVisibility(View.GONE);
@@ -82,7 +85,8 @@ public class NewsFragment extends Fragment implements NewsView {
         newsAdapter.setListNews(news);
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-        if (onRefreshFinishedListener != null) onRefreshFinishedListener.onRefreshFinished();
+        if (news != null && news.size() > 0) presenter.saveNews(news.subList(0,1));
+        if (onRefreshFinishedListener != null)  onRefreshFinishedListener.onRefreshFinished();
     }
 
     @Override

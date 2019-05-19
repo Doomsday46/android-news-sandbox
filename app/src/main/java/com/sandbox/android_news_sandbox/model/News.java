@@ -8,33 +8,19 @@ public class News {
     private String author;
     private String title;
     private String urlImage;
+    private String urlArticle;
     private String content;
+    private String description;
     private Date date;
 
-    public News(String nameResource, String title, String content, Date date) {
-        this.nameResource = nameResource;
-        this.title = title;
-        this.content = content;
-        this.date = date;
-        this.author = "";
-        this.urlImage = "";
-    }
-
-    public News(String nameResource, String title, String image, String content, Date date) {
-        this.nameResource = nameResource;
-        this.title = title;
-        this.urlImage = image;
-        this.content = content;
-        this.date = date;
-        this.author = "";
-    }
-
-    public News(String nameResource, String author, String title, String image, String content, Date date) {
+    public News(String nameResource, String author, String title, String urlImage, String urlArticle, String content, String description, Date date) {
         this.nameResource = nameResource;
         this.author = author;
         this.title = title;
-        this.urlImage = image;
+        this.urlImage = urlImage;
+        this.urlArticle = urlArticle;
         this.content = content;
+        this.description = description;
         this.date = date;
     }
 
@@ -60,5 +46,13 @@ public class News {
 
     public Date getDate() {
         return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUrlArticle() {
+        return urlArticle;
     }
 }
