@@ -1,6 +1,8 @@
-package com.sandbox.android_news_sandbox.data;
+package com.sandbox.android_news_sandbox.data.network;
 
 
+
+import com.sandbox.android_news_sandbox.data.network.dto.NewsDto;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

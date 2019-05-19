@@ -7,21 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sandbox.android_news_sandbox.App;
 import com.sandbox.android_news_sandbox.R;
-import com.sandbox.android_news_sandbox.data.NewsRepositoryImpl;
-import com.sandbox.android_news_sandbox.model.NewsInteractorImpl;
 import com.sandbox.android_news_sandbox.model.News;
 import com.sandbox.android_news_sandbox.presentation.CategoryNews;
-import com.sandbox.android_news_sandbox.presentation.NewsAdapter;
-import com.sandbox.android_news_sandbox.presentation.NewsPresenter;
-import com.sandbox.android_news_sandbox.presentation.Presenter;
+import com.sandbox.android_news_sandbox.presentation.adapter.NewsAdapter;
+import com.sandbox.android_news_sandbox.presentation.presenter.Presenter;
 import com.sandbox.android_news_sandbox.presentation.view.NewsView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class TopFragment extends android.app.Fragment implements NewsView {
 
-    private Presenter presenter;
+    @Inject
+    Presenter presenter;
 
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
@@ -40,11 +41,13 @@ public class TopFragment extends android.app.Fragment implements NewsView {
         newsAdapter = new NewsAdapter();
 
 
-        presenter = new NewsPresenter(new NewsInteractorImpl(new NewsRepositoryImpl(), CategoryNews.UNDEFINED), this);
-        presenter.loadData();
+        App.getMainComponent().inject(this);
+
+        presenter.init(categoryNews, this);
 
         recyclerView.setAdapter(newsAdapter);
 
+        presenter.loadDataFromDatabase();
         return topView;
     }
 
@@ -57,7 +60,7 @@ public class TopFragment extends android.app.Fragment implements NewsView {
 
     @Override
     public void update() {
-        presenter.loadData();
+        presenter.loadDataFromDatabase();
     }
 
     public void setCategoryNews(CategoryNews categoryNews) {

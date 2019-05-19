@@ -1,11 +1,12 @@
-package com.sandbox.android_news_sandbox.data;
+package com.sandbox.android_news_sandbox.data.network.dto;
 
 import com.google.gson.annotations.Expose;
 
-public class Source {
+public class SourceDto {
 
     @Expose
     private String id;
+
     @Expose
     private String name;
 

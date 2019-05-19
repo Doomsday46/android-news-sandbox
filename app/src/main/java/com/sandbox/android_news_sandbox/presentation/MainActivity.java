@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 
 import com.sandbox.android_news_sandbox.R;
+import com.sandbox.android_news_sandbox.presentation.CategoryNews;
 import com.sandbox.android_news_sandbox.presentation.fragments.NewsFragment;
 import com.sandbox.android_news_sandbox.presentation.fragments.TopFragment;
-
-
 
 public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener, NewsFragment.OnRefreshFinishedListener  {
 

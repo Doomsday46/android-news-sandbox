@@ -1,5 +1,7 @@
-package com.sandbox.android_news_sandbox.data;
+package com.sandbox.android_news_sandbox.data.mapper;
 
+import com.sandbox.android_news_sandbox.data.network.dto.ArticleDto;
+import com.sandbox.android_news_sandbox.data.network.dto.NewsDto;
 import com.sandbox.android_news_sandbox.model.News;
 
 import java.util.ArrayList;
@@ -17,7 +19,9 @@ public class ArticleToNewsMapper implements Mapper<List<News>, NewsDto> {
                                 articleDto.getAuthor(),
                                 articleDto.getTitle(),
                                 articleDto.getUrlToImage(),
+                                articleDto.getUrlArticale(),
                                 articleDto.getText(),
+                                articleDto.getDescription(),
                                 articleDto.getDate()));
         }
 

@@ -1,4 +1,4 @@
-package com.sandbox.android_news_sandbox.data;
+package com.sandbox.android_news_sandbox.data.network;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
