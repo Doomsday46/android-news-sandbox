@@ -21,13 +21,9 @@ public class NewsPresenter implements Presenter {
     @SuppressLint("CheckResult")
     @Override
     public void loadData() {
-
         newsInteractor.getNews().subscribe(
-                news -> view.setNews(news),
+                view::setNews,
                 throwable -> { view.setNews(Collections.emptyList()); });
     }
-
-
-
 
 }

@@ -11,14 +11,14 @@ public class ArticleToNewsMapper implements Mapper<List<News>, NewsDto> {
     public List<News> map(NewsDto object) {
         List<News> listNews = new ArrayList<>();
 
-        for (Article article : object.getArticleList()) {
+        for (ArticleDto articleDto : object.getArticleDtoList()) {
 
-            listNews.add(new News(article.getSource().getName(),
-                                article.getAuthor(),
-                                article.getTitle(),
-                                article.getUrlToImage(),
-                                article.getText(),
-                                article.getDate()));
+            listNews.add(new News(articleDto.getSource().getName(),
+                                articleDto.getAuthor(),
+                                articleDto.getTitle(),
+                                articleDto.getUrlToImage(),
+                                articleDto.getText(),
+                                articleDto.getDate()));
         }
 
         return listNews;

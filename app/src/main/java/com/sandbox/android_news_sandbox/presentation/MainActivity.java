@@ -26,7 +26,7 @@ import com.sandbox.android_news_sandbox.presentation.fragments.TopFragment;
 
 
 
-public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener  {
+public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener, NewsFragment.OnRefreshFinishedListener  {
 
     private String[] titles;
     private ListView drawerList;
@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar progressBar;
     private CategoryNews categoryNews;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+
+
     }
 
     public String[] getTitles() {
@@ -82,19 +85,19 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                     FragmentManager fragMan = getFragmentManager();
                     Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
                     if (fragment instanceof TopFragment) {
-                        currentPosition = 4;
-                    }
-                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.SPORTS)) {
                         currentPosition = 0;
                     }
-                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.BUSINESS)) {
+                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.SPORTS)) {
                         currentPosition = 1;
                     }
-                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.TECHNOLOGY)) {
+                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.BUSINESS)) {
                         currentPosition = 2;
                     }
-                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.SCIENCE)) {
+                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.TECHNOLOGY)) {
                         currentPosition = 3;
+                    }
+                    if (fragment instanceof NewsFragment && ((NewsFragment) fragment).getCategoryNews().equals(CategoryNews.SCIENCE)) {
+                        currentPosition = 4;
                     }
                     drawerList.setItemChecked(currentPosition, true);
                     setTitlesToBar(titles);
@@ -109,17 +112,15 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
             setTitlesToBar(titles);
             selectItem(currentPosition);
         } else {
-            selectItem(4);
+            selectItem(0);
         }
     }
 
     private void initDrawerToggle(){
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.open_drawer, R.string.close_drawer) {
-
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
@@ -129,8 +130,6 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
             }
-
-
         };
 
         drawerLayout.setDrawerListener(drawerToggle);
@@ -180,6 +179,12 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
+        if (fragment instanceof NewsFragment)
+            ((NewsFragment) fragment).update();
+    }
+
+    @Override
+    public void onRefreshFinished() {
         new Handler().postDelayed(() -> {
             mSwipeRefreshLayout.setRefreshing(false);
         }, 0);
@@ -194,24 +199,23 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
     private void selectItem(int position) {
         currentPosition = position;
-        Fragment fragment;
         switch(position) {
-            case 0:
+            case 1:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.SPORTS);
                 categoryNews = CategoryNews.SPORTS;
                 break;
-            case 1:
+            case 2:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.BUSINESS);
                 categoryNews = CategoryNews.BUSINESS;
                 break;
-            case 2:
+            case 3:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.TECHNOLOGY);
                 categoryNews = CategoryNews.TECHNOLOGY;
                 break;
-            case 3:
+            case 4:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.SCIENCE);
                 categoryNews = CategoryNews.SCIENCE;
@@ -222,8 +226,10 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                 categoryNews = CategoryNews.UNDEFINED;
         }
         if (fragment instanceof NewsFragment) {
-            ((NewsFragment) fragment).setProgressBar(progressBar);
+            ((NewsFragment) fragment).setOnRefreshFinishedListener(this);
+            mSwipeRefreshLayout.setEnabled(true);
         }
+        else mSwipeRefreshLayout.setEnabled(false);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment,"visible_fragment");
         ft.addToBackStack(null);

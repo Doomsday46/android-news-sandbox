@@ -12,7 +12,7 @@ public class NewsDto {
 
     @SerializedName("articles")
     @Expose
-    private List<Article> articleList;
+    private List<ArticleDto> articleDtoList;
 
     public int getTotalResults() {
         return totalResults;
@@ -22,12 +22,12 @@ public class NewsDto {
         this.totalResults = totalResults;
     }
 
-    public List<Article> getArticleList() {
-        return articleList;
+    public List<ArticleDto> getArticleDtoList() {
+        return articleDtoList;
     }
 
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+    public void setArticleDtoList(List<ArticleDto> articleDtoList) {
+        this.articleDtoList = articleDtoList;
     }
 
 }

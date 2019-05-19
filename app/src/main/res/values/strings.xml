@@ -5,6 +5,7 @@
     <string name="action_settings">Setting</string>
     <string name="action_sort">Sort</string>
     <string-array name="titles">
+        <item>Home</item>
         <item>Sports</item>
         <item>Business</item>
         <item>Technology</item>
