@@ -10,4 +10,7 @@ public enum CategoryNews {
     public String toString() {
         return name().toLowerCase();
     }
+
+
+
 }

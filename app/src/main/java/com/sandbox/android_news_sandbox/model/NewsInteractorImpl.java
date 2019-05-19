@@ -22,7 +22,7 @@ public class NewsInteractorImpl implements NewsInteractor {
 
     @Override
     public Observable<List<News>> getNews() {
-        if (categoryNews.equals("Undefined")) return newsRepository.getNews()
+        if (categoryNews.equals("undefined")) return newsRepository.getNews()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
         return newsRepository.getNews(categoryNews)

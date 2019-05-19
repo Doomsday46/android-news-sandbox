@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 
 import com.sandbox.android_news_sandbox.R;
@@ -34,6 +35,8 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
     private int currentPosition = 0;
     private ShareActionProvider shareActionProvider;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ProgressBar progressBar;
+    private CategoryNews categoryNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
         titles = getResources().getStringArray(R.array.titles);
 
-
+        progressBar = findViewById(R.id.progressBar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -55,6 +58,22 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+    }
+
+    public String[] getTitles() {
+        return titles;
+    }
+
+    public void setTitles(String[] titles) {
+        this.titles = titles;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     private void initBackStackChangedListener(){
@@ -78,6 +97,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                         currentPosition = 3;
                     }
                     drawerList.setItemChecked(currentPosition, true);
+                    setTitlesToBar(titles);
                 }
         );
     }
@@ -85,6 +105,9 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
     private void saveInstance(Bundle savedInstanceState){
         if (savedInstanceState != null) {
             currentPosition = savedInstanceState.getInt("position");
+            categoryNews = CategoryNews.valueOf(savedInstanceState.getString("category").toUpperCase());
+            setTitlesToBar(titles);
+            selectItem(currentPosition);
         } else {
             selectItem(4);
         }
@@ -141,29 +164,26 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("position", currentPosition);
+        outState.putString("category", categoryNews.toString());
     }
-
-
 
     @Override
     public void onRefresh() {
         new Handler().postDelayed(() -> {
-
             mSwipeRefreshLayout.setRefreshing(false);
         }, 0);
     }
-
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -179,22 +199,30 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
             case 0:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.SPORTS);
+                categoryNews = CategoryNews.SPORTS;
                 break;
             case 1:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.BUSINESS);
+                categoryNews = CategoryNews.BUSINESS;
                 break;
             case 2:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.TECHNOLOGY);
+                categoryNews = CategoryNews.TECHNOLOGY;
                 break;
             case 3:
                 fragment = new NewsFragment();
                 ((NewsFragment) fragment).setCategoryNews(CategoryNews.SCIENCE);
+                categoryNews = CategoryNews.SCIENCE;
                 break;
             default:
                 fragment = new TopFragment();
                 ((TopFragment) fragment).setCategoryNews(CategoryNews.UNDEFINED);
+                categoryNews = CategoryNews.UNDEFINED;
+        }
+        if (fragment instanceof NewsFragment) {
+            ((NewsFragment) fragment).setProgressBar(progressBar);
         }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment,"visible_fragment");
@@ -202,6 +230,17 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
 
+        setTitlesToBar(titles);
+
         drawerLayout.closeDrawer(drawerList);
+    }
+
+    private void setTitlesToBar(String[] titles) {
+        if (currentPosition < titles.length) {
+            String title = titles[currentPosition];
+            getActionBar().setTitle(title);
+        } else {
+            getActionBar().setTitle(getResources().getString(R.string.app_name));
+        }
     }
 }

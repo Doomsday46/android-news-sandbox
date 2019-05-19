@@ -24,7 +24,7 @@ public class NewsPresenter implements Presenter {
 
         newsInteractor.getNews().subscribe(
                 news -> view.setNews(news),
-                throwable -> { view.setNews(Collections.emptyList()); throw new NullPointerException(); });
+                throwable -> { view.setNews(Collections.emptyList()); });
     }
 
 
